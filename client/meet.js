@@ -14,10 +14,10 @@ let ws;
 let localStream = null;
 let peers = {};
 
-if (!isHttps) {
-  window.location.href = "https://" +
-    window.location.href.replace("http://", "");
-}
+// if (!isHttps) {
+//   window.location.href = "https://" +
+//     window.location.href.replace("http://", "");
+// }
 const configuration = {
   "iceServers": [
     {
