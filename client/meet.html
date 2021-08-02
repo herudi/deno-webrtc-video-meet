@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Deno Lite Meet</title>
+    <script src="https://cdn.jsdelivr.net/npm/simple-peer@9.11.0/simplepeer.min.js"></script>
+    <link rel="stylesheet" href="./meet.css"/>
+</head>
+
+<body>
+    <div id="meet">
+        <div class="row" id="videos">
+            <div class="col container">
+                <video id="localVideo" class="vid" autoplay muted></video>
+                <div class="overlay-text" id="me" style="display: none;">
+                    Me
+                </div>
+                <div class="overlay-text" id="loading">
+                    Loading...
+                </div>
+            </div>          
+        </div>
+        <br />
+        <div class="settings" id="settings" style="display: none;">
+            <button id="switchButton" class="button" onclick="switchMedia()">
+                Switch Camera
+            </button>
+            <button id="muteButton" class="button" onclick="toggleMute()">
+                Unmuted
+            </button>
+            <button id="vidButton" class="button" onclick="toggleVid()">
+                Video Enabled
+            </button>
+            <button class="button" onclick="shareScreen()">
+                Share Screen
+            </button>
+            <button class="button" onclick="inviteFriend()">
+                Invite Friend
+            </button>
+            <button class="button" onclick="logout()">
+                Logout
+            </button>
+        </div>
+    </div>
+    <script src='./meet.js' lang="text/javascript"></script>
+</body>
+
+</html>
