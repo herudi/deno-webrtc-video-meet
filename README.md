@@ -1,5 +1,6 @@
 # Deno WebRTC
 Deno Lite Meet with native websocket.
+> Requires Deno 1.12.2 or higher.
 
 ## Run
 ```bash
