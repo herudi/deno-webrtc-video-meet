@@ -9,7 +9,9 @@ const MAX_USER = 16;
 
 const DEFAULT_PORT = 3000;
 
-const PORT = Deno.args.length === 0 ? DEFAULT_PORT : Number(Deno.args[0].replace("--port=", ""));
+const PORT = Deno.args.length === 0
+  ? DEFAULT_PORT
+  : Number(Deno.args[0].replace("--port=", ""));
 
 function tryDecode(str: string) {
   try {
