@@ -1,4 +1,8 @@
 const meetElement = document.getElementById("meet");
+const chatInput = document.getElementById("chatInput");
+const chatbox = document.getElementById("chatbox");
+const chatMessage = document.getElementById("chatMessage");
+const chatForm = document.getElementById("chatForm");
 meetElement.style.display = "none";
 const token = localStorage.getItem("meet_token");
 const isHttps = window.location.href.startsWith("https");
@@ -9,15 +13,21 @@ function logout() {
     window.location.href = "./";
   }, 300);
 }
+function openChat() {
+  chatbox.style.display = "block";
+}
+function closeChat() {
+  chatbox.style.display = "none";
+}
 
 let ws;
 let localStream = null;
 let peers = {};
 
-if (!isHttps) {
-  window.location.href = "https://" +
-    window.location.href.replace("http://", "");
-}
+// if (!isHttps) {
+//   window.location.href = "https://" +
+//     window.location.href.replace("http://", "");
+// }
 const configuration = {
   "iceServers": [
     {
@@ -73,16 +83,19 @@ function init(token, stream) {
       localStream = stream;
       info = data;
       document.getElementById("settings").style.display = "inline-block";
-      document.getElementById("me").style.display = "inline-block";
-      document.getElementById("loading").style.display = "none";
+      document.getElementById("me").innerHTML = `Me: ${info.id}`;
     } else if (type === "initSend") addPeer(data.id, true);
     else if (type === "removePeer") removePeer(data.id);
     else if (type === "signal") peers[data.id].signal(data.signal);
     else if (type === "full") alert("Room FULL");
     else if (type === "errorToken") logout();
-    else if (type === "strictUser") {
-      alert("User " + data.id + " already exist. please choose other.");
-    }
+    else if (type === "chat") {
+      chatMessage.innerHTML += `
+        <div class="chat-message">
+          <b>${data.id.split("@")[0]}: </b>${data.message}
+        </div>
+      `;
+    };
   };
 }
 function removePeer(id) {
@@ -159,7 +172,7 @@ function switchMedia() {
         for (let index2 in stream.getTracks()) {
           if (
             peers[id].streams[0].getTracks()[index].kind ===
-              stream.getTracks()[index2].kind
+            stream.getTracks()[index2].kind
           ) {
             peers[id].replaceTrack(
               peers[id].streams[0].getTracks()[index],
@@ -184,7 +197,7 @@ function shareScreen() {
         for (let index2 in stream.getTracks()) {
           if (
             peers[id].streams[0].getTracks()[index].kind ===
-              stream.getTracks()[index2].kind
+            stream.getTracks()[index2].kind
           ) {
             peers[id].replaceTrack(
               peers[id].streams[0].getTracks()[index],
@@ -262,6 +275,19 @@ function inviteFriend() {
   if (result) {
     alert("Link was copied to clipboard");
   }
+}
+chatForm.onsubmit = (e) => {
+  e.preventDefault();
+  ws.send(JSON.stringify({
+    type: "chat",
+    data: { id: info.id, message: chatInput.value }
+  }));
+  chatMessage.innerHTML += `
+    <div class="chat-message">
+      <b>Me: </b>${chatInput.value}
+    </div>
+  `;
+  chatInput.value = "";
 }
 
 if (token) {

@@ -13,10 +13,7 @@
         <div class="row" id="videos">
             <div class="col container">
                 <video id="localVideo" class="vid" autoplay muted></video>
-                <div class="overlay-text" id="me" style="display: none;">
-                    Me
-                </div>
-                <div class="overlay-text" id="loading">
+                <div class="overlay-text" id="me">
                     Loading...
                 </div>
             </div>          
@@ -38,9 +35,21 @@
             <button class="button" onclick="inviteFriend()">
                 Invite Friend
             </button>
+            <button class="button" onclick="openChat()">
+                Chat
+            </button>
             <button class="button" onclick="logout()">
                 Logout
             </button>
+        </div>
+        <div class="chat-container" id="chatbox" style="display: none;">
+            <button type="button" onclick="closeChat()">CLOSE</button>
+            <div class="chat-inner" id="chatMessage">
+            </div>
+            <form style="position: absolute; bottom: 10px;" id="chatForm">
+                <input placeholder="message" style="width: 320px;" id="chatInput"/>
+                <button type="submit" style="width: 60px;">SEND</button>
+            </form>
         </div>
     </div>
     <script src='./meet.js' lang="text/javascript"></script>

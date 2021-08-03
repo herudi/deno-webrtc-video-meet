@@ -45,30 +45,23 @@ new NHttp()
           type: "errorToken",
           data: {},
         });
-      } else if (peers[room][id]) {
+      } else if (Object.keys(peers[room] || {}).length >= MAX_USER) {
         wsSend(websocket, {
-          type: "strictUser",
-          data: { id },
+          type: "full",
+          data: {},
         });
       } else {
-        if (Object.keys(peers[room] || {}).length >= MAX_USER) {
-          wsSend(websocket, {
-            type: "full",
-            data: {},
-          });
-        } else {
-          wsSend(websocket, {
-            type: "opening",
-            data: { id, room },
-          });
-          peers[room][id] = websocket;
-          for (let _id in peers[room]) {
-            if (_id !== id) {
-              wsSend(peers[room][_id], {
-                type: "initReceive",
-                data: { id },
-              });
-            }
+        wsSend(websocket, {
+          type: "opening",
+          data: { id, room },
+        });
+        peers[room][id] = websocket;
+        for (let _id in peers[room]) {
+          if (_id !== id) {
+            wsSend(peers[room][_id], {
+              type: "initReceive",
+              data: { id },
+            });
           }
         }
       }
@@ -86,6 +79,15 @@ new NHttp()
           type: "initSend",
           data: { id },
         });
+      } else if (type === "chat") {
+        for (let _id in peers[room]) {
+          if (_id !== id) {
+            wsSend(peers[room][_id], {
+              type: "chat",
+              data: { id, message: data.message },
+            });
+          }
+        }
       }
     };
     websocket.onclose = () => {

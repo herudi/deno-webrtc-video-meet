@@ -49,8 +49,8 @@ body {
   left: 8px;
   z-index: 1;
   color: white;
-  background-color: rgb(0 0 0 / 33%); 
-  padding: 5px
+  background-color: rgb(0 0 0 / 33%);
+  padding: 5px;
 }
 
 .vid {
@@ -76,4 +76,33 @@ body {
   bottom: 0px;
   transform: translate(-50%, -50%);
   margin: 0 auto;
+}
+
+.chat-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background: #f1f2f3;
+  width: 400px;
+  padding: 10px;
+}
+
+.chat-inner {
+  overflow: scroll;
+  position: absolute;
+  top: 40px;
+  bottom: 40px;
+  right: 0;
+  left: 10px;
+}
+.chat-message {
+  color: #000;
+  padding-top: 10px;
+  max-width: 600px;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  position: relative;
+  word-break: break-all;
 }
