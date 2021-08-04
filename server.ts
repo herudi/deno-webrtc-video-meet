@@ -4,7 +4,7 @@ const peers = {} as any;
 const decoder = new TextDecoder();
 const encoder = new TextEncoder();
 
-// safety
+// max_user/room
 const MAX_USER = 16;
 
 const DEFAULT_PORT = 3000;
