@@ -24,10 +24,10 @@ let ws;
 let localStream = null;
 let peers = {};
 
-if (!isHttps) {
-  window.location.href = "https://" +
-    window.location.href.replace("http://", "");
-}
+// if (!isHttps) {
+//   window.location.href = "https://" +
+//     window.location.href.replace("http://", "");
+// }
 const configuration = {
   "iceServers": [
     {
@@ -95,7 +95,7 @@ function init(token, stream) {
           <b>${data.id.split("@")[0]}: </b>${data.message}
         </div>
       `;
-    };
+    }
   };
 }
 function removePeer(id) {
@@ -172,7 +172,7 @@ function switchMedia() {
         for (let index2 in stream.getTracks()) {
           if (
             peers[id].streams[0].getTracks()[index].kind ===
-            stream.getTracks()[index2].kind
+              stream.getTracks()[index2].kind
           ) {
             peers[id].replaceTrack(
               peers[id].streams[0].getTracks()[index],
@@ -197,7 +197,7 @@ function shareScreen() {
         for (let index2 in stream.getTracks()) {
           if (
             peers[id].streams[0].getTracks()[index].kind ===
-            stream.getTracks()[index2].kind
+              stream.getTracks()[index2].kind
           ) {
             peers[id].replaceTrack(
               peers[id].streams[0].getTracks()[index],
@@ -280,7 +280,7 @@ chatForm.onsubmit = (e) => {
   e.preventDefault();
   ws.send(JSON.stringify({
     type: "chat",
-    data: { id: info.id, message: chatInput.value }
+    data: { id: info.id, message: chatInput.value },
   }));
   chatMessage.innerHTML += `
     <div class="chat-message">
@@ -288,7 +288,7 @@ chatForm.onsubmit = (e) => {
     </div>
   `;
   chatInput.value = "";
-}
+};
 
 if (token) {
   meetElement.style.display = "block";
