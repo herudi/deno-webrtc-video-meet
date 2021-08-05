@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="icon" href="data:,">
     <title>Deno Lite Meet</title>
     <style>
         html,
@@ -12,26 +12,48 @@
             color: white;
             font-family: sans-serif;
         }
+
+        input[type=text], input[type=email] {
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type=submit] {
+            background-color: #664caf;
+            color: white;
+            padding: 11px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type=submit]:hover {
+            background-color: #4c3b7a;
+        }
     </style>
 </head>
 
 <body>
     <div id="home">
         <div style="text-align: center; width: 100%; margin-top: 40px;">
-            <img src="https://deno.land/images/glitchy-deno.jpg" alt="deno" width="200"/>
+            <img src="https://deno.land/images/glitchy-deno.jpg" alt="deno" width="150" />
             <h1 style="margin-bottom: 5px">Deno Lite Meet</h1>
             <div style="margin-bottom: 15px">Simple webRTC with Deno native websocket</div>
             <form id="form">
-                <input id="room" placeholder="Room" required />
+                <input type="text" id="room" placeholder="Room" required />
                 <input type="email" id="username" placeholder="Email" required />
-                <button type="submit">Join / Create</button>
+                <input type="submit" value="Join / Create">
             </form>
             <div style="margin-top: 15px">
                 <a target="_blank" style="color: white" href="https://github.com/herudi/deno-webrtc-video-meet">Repo</a>
                 <span> ~ </span>
                 <a target="_blank" style="color: white" href="https://github.com/nhttp/nhttp">NHttp</a>
                 <span> ~ </span>
-                <a target="_blank" style="color: white" href="https://github.com/herudi">Author</a>
+                <a target="_blank" style="color: white" href="https://github.com/herudi">Developer</a>
                 <span> ~ </span>
                 <a target="_blank" style="color: white" href="https://deno.land/">Deno</a>
                 <span> ~ </span>

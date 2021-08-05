@@ -1,4 +1,4 @@
-import { NHttp } from "https://deno.land/x/nhttp@0.8.2/mod.ts";
+import { Handler, NHttp } from "https://deno.land/x/nhttp@0.8.2/mod.ts";
 
 const peers = {} as any;
 const decoder = new TextDecoder();
@@ -7,13 +7,19 @@ const encoder = new TextEncoder();
 // max_user/room
 const MAX_USER = 16;
 
+const MIME: Record<string, string> = {
+  ".css": "text/css",
+  ".html": "text/html",
+  ".js": "application/javascript",
+};
+
 const DEFAULT_PORT = 3000;
 
 const PORT = Deno.args.length === 0
   ? DEFAULT_PORT
   : Number(Deno.args[0].replace("--port=", ""));
 
-function tryDecode(str: string) {
+const tryDecode = (str: string) => {
   try {
     const uint = Uint8Array.from(atob(str).split(",") as Iterable<number>);
     const ret = JSON.parse(decoder.decode(uint));
@@ -21,23 +27,28 @@ function tryDecode(str: string) {
   } catch (_e) {
     return {};
   }
-}
+};
 
-function wsSend(ws: WebSocket, data: Record<string, any>) {
+const wsSend = (ws: WebSocket, data: Record<string, any>) => {
   ws.send(JSON.stringify(data));
-}
+};
+
+const wsMiddleware: Handler = (rev, next) => {
+  if (rev.request.headers.get("upgrade") != "websocket") {
+    return next();
+  }
+  rev.user = tryDecode(rev.params.token);
+  next();
+};
 
 new NHttp()
   .get("/", ({ response }) => {
     response.type("text/html");
     return Deno.readFile("./client/home.html");
   })
-  .get("/ws/:token", ({ request, params }, next) => {
-    if (request.headers.get("upgrade") != "websocket") {
-      return next();
-    }
+  .get("/ws/:token", wsMiddleware, ({ request, user }) => {
     const { websocket, response } = Deno.upgradeWebSocket(request);
-    const { id, room } = tryDecode(params.token);
+    const { id, room } = user;
     peers[room] = peers[room] || {};
     websocket.onopen = () => {
       if (!id && !room) {
@@ -111,14 +122,6 @@ new NHttp()
     response.type("text/html");
     return Deno.readFile("./client/meet.html");
   })
-  .get("/meet.js", ({ response }) => {
-    response.type("application/javascript");
-    return Deno.readFile("./client/meet.js");
-  })
-  .get("/meet.css", ({ response }) => {
-    response.type("text/css");
-    return Deno.readFile("./client/meet.css");
-  })
   .post("/join-or-create", ({ body }) => {
     const { id, room } = body;
     if ((peers[room] || {})[id]) {
@@ -129,5 +132,9 @@ new NHttp()
     }
     const token = btoa(encoder.encode(JSON.stringify(body)).toString());
     return { token };
+  })
+  .get("/*", ({ response, url }) => {
+    response.type(MIME[url.substring(url.lastIndexOf("."))]);
+    return Deno.readFile("./client" + url);
   })
   .listen(PORT);

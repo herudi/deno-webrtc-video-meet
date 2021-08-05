@@ -10,6 +10,7 @@ Deno webRTC video meet and chat with native websocket.
 - Chat
 - Share Screen
 - Room
+- No Phuser, No SocketIO
 
 ## Run
 

@@ -15,6 +15,9 @@ function logout() {
 }
 function openChat() {
   chatbox.style.display = "block";
+  setTimeout(() => {
+    chatInput.focus();
+  }, 300);
 }
 function closeChat() {
   chatbox.style.display = "none";
@@ -95,6 +98,7 @@ function init(token, stream) {
           <b>${data.id.split("@")[0]}: </b>${data.message}
         </div>
       `;
+      openChat();
     }
   };
 }
@@ -140,8 +144,8 @@ function addPeer(id, am_initiator) {
     newVid.playsinline = false;
     newVid.autoplay = true;
     newVid.className = "vid";
-    newVid.onclick = () => openPictureMode(newVid);
-    newVid.ontouchstart = (e) => openPictureMode(newVid);
+    newVid.onclick = () => openPictureMode(newVid, id);
+    newVid.ontouchstart = (e) => openPictureMode(newVid, id);
 
     // user
     let user = document.createElement("div");
@@ -151,8 +155,13 @@ function addPeer(id, am_initiator) {
     videos.appendChild(col);
   });
 }
-function openPictureMode(el) {
+function openPictureMode(el, id) {
   el.requestPictureInPicture();
+  el.onleavepictureinpicture = (e) => {
+    setTimeout(() => {
+      document.getElementById(id).play();
+    }, 300);
+  };
 }
 
 function switchMedia() {
@@ -278,6 +287,9 @@ function inviteFriend() {
 }
 chatForm.onsubmit = (e) => {
   e.preventDefault();
+  if (!chatInput.value) {
+    return;
+  }
   ws.send(JSON.stringify({
     type: "chat",
     data: { id: info.id, message: chatInput.value },
@@ -288,6 +300,7 @@ chatForm.onsubmit = (e) => {
     </div>
   `;
   chatInput.value = "";
+  chatMessage.scrollTop = chatMessage.scrollHeight;
 };
 
 if (token) {
