@@ -27,10 +27,10 @@ let ws;
 let localStream = null;
 let peers = {};
 
-if (!isHttps) {
-  window.location.href = "https://" +
-    window.location.href.replace("http://", "");
-}
+// if (!isHttps) {
+//   window.location.href = "https://" +
+//     window.location.href.replace("http://", "");
+// }
 const configuration = {
   "iceServers": [
     {
@@ -135,7 +135,7 @@ function addPeer(id, am_initiator) {
     // col
     let col = document.createElement("col");
     col.id = "col-" + id;
-    col.className = "col container";
+    col.className = "container";
 
     // video
     let newVid = document.createElement("video");
