@@ -2,7 +2,7 @@
 
 [Deno](https://deno.land/) WebRTC video meet and chat with deno native websocket.
 
-> Requires Deno 1.16.x or higher.
+> Requires Deno 1.15.x or higher.
 
 ## Features
 

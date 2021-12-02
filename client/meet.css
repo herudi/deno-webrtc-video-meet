@@ -47,9 +47,9 @@ body {
 
 .settings {
   position: fixed;
-  left: 50%;
+  left: 46%;
   bottom: 0px;
-  transform: translate(-50%, -50%);
+  transform: translate(-46%, -50%);
   margin: 0 auto;
 }
 
@@ -102,4 +102,29 @@ input[type='submit'] {
 
 input[type='submit']:hover {
   background-color: #4c3b7a;
+}
+
+.my-input-chat {
+  width: 320px;
+}
+
+@media screen and (max-width: 800px) {
+  .settings {
+    text-align: center;
+    left: 0%;
+    transform: translate(-0%, -0%);
+  }
+  .vid {
+    width: calc(100vw / 2);
+    height: calc(100vh / 4);
+  }
+  .overlay-text {
+    font-size: 10px;
+  }
+  .chat-container {
+    width: calc(100vw - 10px);
+  }
+  .my-input-chat {
+    width: calc(100vw - (10px + 55px));
+  }
 }

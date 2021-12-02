@@ -183,7 +183,7 @@ function switchMedia() {
         for (let index2 in stream.getTracks()) {
           if (
             peers[id].streams[0].getTracks()[index].kind ===
-              stream.getTracks()[index2].kind
+            stream.getTracks()[index2].kind
           ) {
             peers[id].replaceTrack(
               peers[id].streams[0].getTracks()[index],
@@ -208,7 +208,7 @@ function shareScreen() {
         for (let index2 in stream.getTracks()) {
           if (
             peers[id].streams[0].getTracks()[index].kind ===
-              stream.getTracks()[index2].kind
+            stream.getTracks()[index2].kind
           ) {
             peers[id].replaceTrack(
               peers[id].streams[0].getTracks()[index],
@@ -249,8 +249,8 @@ function toggleMute() {
     localStream.getAudioTracks()[index].enabled = !localStream
       .getAudioTracks()[index].enabled;
     muteButton.innerText = localStream.getAudioTracks()[index].enabled
-      ? "Unmuted"
-      : "Muted";
+      ? "Sound Enabled"
+      : "Sound Disabled";
   }
 }
 function toggleVid() {
@@ -270,8 +270,8 @@ function updateButtons() {
   }
   for (let index in localStream.getAudioTracks()) {
     muteButton.innerText = localStream.getAudioTracks()[index].enabled
-      ? "Unmuted"
-      : "Muted";
+      ? "Sound Enabled"
+      : "Sound Disabled";
   }
 }
 

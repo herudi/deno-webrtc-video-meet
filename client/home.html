@@ -3,38 +3,10 @@
 
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="./home.css"/>
     <title>Deno Lite Meet</title>
-    <style>
-        html,
-        body {
-            background-color: #131315;
-            color: white;
-            font-family: sans-serif;
-        }
-
-        input[type=text], input[type=email] {
-            padding: 10px;
-            margin: 8px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        input[type=submit] {
-            background-color: #664caf;
-            color: white;
-            padding: 11px;
-            margin: 8px 0;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        input[type=submit]:hover {
-            background-color: #4c3b7a;
-        }
-    </style>
 </head>
 
 <body>
@@ -44,9 +16,9 @@
             <h1 style="margin-bottom: 5px">Deno Lite Meet</h1>
             <div style="margin-bottom: 15px">Simple webRTC with Deno native websocket</div>
             <form id="form">
-                <input type="text" id="room" placeholder="Room" required />
-                <input type="email" id="username" placeholder="Email" required />
-                <input type="submit" value="Join / Create">
+                <input class="my-input" type="text" id="room" placeholder="Room" required />
+                <input class="my-input" type="email" id="username" placeholder="Email" required />
+                <input class="my-input" type="submit" value="Join / Create">
             </form>
             <div style="margin-top: 15px">
                 <a target="_blank" style="color: white" href="https://github.com/herudi/deno-webrtc-video-meet">Repo</a>
