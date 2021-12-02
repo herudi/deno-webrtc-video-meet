@@ -133,8 +133,16 @@ new NHttp()
     const token = btoa(encoder.encode(JSON.stringify(body)).toString());
     return { token };
   })
-  .get("*", ({ response, url }) => {
-    response.type(MIME[url.substring(url.lastIndexOf("."))]);
-    return Deno.readFile("./client" + url);
+  .get("*", async ({ response, url }, next) => {
+    try {
+      response.type(MIME[url.substring(url.lastIndexOf("."))]);
+      return await Deno.readFile("./client" + url);
+    } catch (_e) {
+      return next();
+    }
+  })
+  .on404(({ response }) => {
+    response.type('text/html');
+    return `<h1>404 NOT FOUND</h1>`;
   })
   .listen(PORT);
