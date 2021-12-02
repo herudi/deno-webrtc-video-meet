@@ -1,4 +1,4 @@
-import { Handler, NHttp } from "https://deno.land/x/nhttp@1.1.1/mod.ts";
+import { Handler, NHttp, HttpError } from "https://deno.land/x/nhttp@1.1.1/mod.ts";
 
 const peers = {} as any;
 const decoder = new TextDecoder();
@@ -35,10 +35,10 @@ const wsSend = (ws: WebSocket, data: Record<string, any>) => {
 
 const wsMiddleware: Handler = (rev, next) => {
   if (rev.request.headers.get("upgrade") != "websocket") {
-    return next();
+    throw new HttpError(400, 'Protocol not supported');
   }
   rev.user = tryDecode(rev.params.token);
-  next();
+  return next();
 };
 
 new NHttp()
@@ -125,15 +125,15 @@ new NHttp()
   .post("/join-or-create", ({ body }) => {
     const { id, room } = body;
     if ((peers[room] || {})[id]) {
-      throw new Error("User " + id + " already exist");
+      throw new HttpError(400, "User " + id + " already exist");
     }
     if (Object.keys(peers[room] || {}).length >= MAX_USER) {
-      throw new Error("Room " + room + " full");
+      throw new HttpError(400, "Room " + room + " full");
     }
     const token = btoa(encoder.encode(JSON.stringify(body)).toString());
     return { token };
   })
-  .get("/*", ({ response, url }) => {
+  .get("*", ({ response, url }) => {
     response.type(MIME[url.substring(url.lastIndexOf("."))]);
     return Deno.readFile("./client" + url);
   })
