@@ -7,6 +7,9 @@ meetElement.style.display = "none";
 const token = localStorage.getItem("meet_token");
 const isHttps = window.location.href.startsWith("https");
 
+// change to false if non ssl.
+const redirectToHttps = true;
+
 function logout() {
   localStorage.removeItem("meet_token");
   setTimeout(() => {
@@ -26,8 +29,7 @@ function closeChat() {
 let ws;
 let localStream = null;
 let peers = {};
-
-if (!isHttps) {
+if (redirectToHttps && !isHttps) {
   window.location.href = "https://" +
     window.location.href.replace("http://", "");
 }

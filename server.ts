@@ -1,4 +1,4 @@
-import { Handler, NHttp } from "https://deno.land/x/nhttp@0.8.2/mod.ts";
+import { Handler, NHttp } from "https://deno.land/x/nhttp@1.1.1/mod.ts";
 
 const peers = {} as any;
 const decoder = new TextDecoder();
@@ -13,7 +13,7 @@ const MIME: Record<string, string> = {
   ".js": "application/javascript",
 };
 
-const DEFAULT_PORT = 3000;
+const DEFAULT_PORT = 8080;
 
 const PORT = Deno.args.length === 0
   ? DEFAULT_PORT
@@ -47,26 +47,26 @@ new NHttp()
     return Deno.readFile("./client/home.html");
   })
   .get("/ws/:token", wsMiddleware, ({ request, user }) => {
-    const { websocket, response } = Deno.upgradeWebSocket(request);
+    const { socket, response } = Deno.upgradeWebSocket(request);
     const { id, room } = user;
     peers[room] = peers[room] || {};
-    websocket.onopen = () => {
+    socket.onopen = () => {
       if (!id && !room) {
-        wsSend(websocket, {
+        wsSend(socket, {
           type: "errorToken",
           data: {},
         });
       } else if (Object.keys(peers[room] || {}).length >= MAX_USER) {
-        wsSend(websocket, {
+        wsSend(socket, {
           type: "full",
           data: {},
         });
       } else {
-        wsSend(websocket, {
+        wsSend(socket, {
           type: "opening",
           data: { id, room },
         });
-        peers[room][id] = websocket;
+        peers[room][id] = socket;
         for (let _id in peers[room]) {
           if (_id !== id) {
             wsSend(peers[room][_id], {
@@ -77,7 +77,7 @@ new NHttp()
         }
       }
     };
-    websocket.onmessage = (e) => {
+    socket.onmessage = (e) => {
       const { type, data } = JSON.parse(e.data);
       if (type === "signal") {
         if (!peers[room][data.id]) return;
@@ -101,7 +101,7 @@ new NHttp()
         }
       }
     };
-    websocket.onclose = () => {
+    socket.onclose = () => {
       for (let _id in peers[room]) {
         if (_id !== id) {
           wsSend(peers[room][_id], {
