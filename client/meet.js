@@ -249,8 +249,8 @@ function toggleMute() {
     localStream.getAudioTracks()[index].enabled = !localStream
       .getAudioTracks()[index].enabled;
     muteButton.innerText = localStream.getAudioTracks()[index].enabled
-      ? "Sound Enabled"
-      : "Sound Disabled";
+      ? "Unmuted"
+      : "Muted";
   }
 }
 function toggleVid() {
@@ -270,8 +270,8 @@ function updateButtons() {
   }
   for (let index in localStream.getAudioTracks()) {
     muteButton.innerText = localStream.getAudioTracks()[index].enabled
-      ? "Sound Enabled"
-      : "Sound Disabled";
+      ? "Unmuted"
+      : "Muted";
   }
 }
 
