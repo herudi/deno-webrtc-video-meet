@@ -15,7 +15,7 @@ const MIME: Record<string, string> = {
 
 const DEFAULT_PORT = 8080;
 
-const PORT = Deno.args.length === 0
+const PORT = (Deno.args || []).length === 0
   ? DEFAULT_PORT
   : Number(Deno.args[0].replace("--port=", ""));
 
