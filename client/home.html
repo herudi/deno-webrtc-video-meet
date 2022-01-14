@@ -16,7 +16,7 @@
             <h1 style="margin-bottom: 5px">Deno Lite Meet</h1>
             <div style="margin-bottom: 15px">Simple webRTC with Deno native websocket</div>
             <form id="form">
-                <input class="my-input" type="text" id="room" placeholder="Room" required />
+                <input title="Can't use special character" class="my-input" type="text" id="room" placeholder="Room (no special char)" pattern="^[a-zA-Z0-9]+$" required />
                 <input class="my-input" type="email" id="username" placeholder="Email" required />
                 <input class="my-input" type="submit" value="Join / Create">
             </form>

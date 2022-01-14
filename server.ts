@@ -1,4 +1,4 @@
-import { Handler, NHttp, HttpError } from "https://deno.land/x/nhttp@1.1.1/mod.ts";
+import { Handler, NHttp, HttpError } from "https://deno.land/x/nhttp@1.1.5/mod.ts";
 
 const peers = {} as any;
 const decoder = new TextDecoder();
@@ -133,10 +133,10 @@ new NHttp()
     const token = btoa(encoder.encode(JSON.stringify(body)).toString());
     return { token };
   })
-  .get("*", async ({ response, url }, next) => {
+  .get("*", async ({ response, path }, next) => {
     try {
-      response.type(MIME[url.substring(url.lastIndexOf("."))]);
-      return await Deno.readFile("./client" + url);
+      response.type(MIME[path.substring(path.lastIndexOf("."))]);
+      return await Deno.readFile("./client" + path);
     } catch (_e) {
       return next();
     }
