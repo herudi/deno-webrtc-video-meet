@@ -2,6 +2,8 @@
 
 [Deno](https://deno.land/) WebRTC video meet and chat with deno native websocket.
 
+[![Deploy](https://deno.com/deno-deploy-button.svg)](https://dash.deno.com/new?url=https://raw.githubusercontent.com/herudi/deno-webrtc-video-meet/master/server.ts)
+
 > Requires Deno 1.15.x or higher.
 
 ## Features
