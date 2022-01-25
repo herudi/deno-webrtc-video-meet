@@ -1,4 +1,4 @@
-import { Handler, NHttp, HttpError } from "https://deno.land/x/nhttp@1.1.5/mod.ts";
+import { Handler, NHttp, HttpError } from "https://deno.land/x/nhttp@1.1.9/mod.ts";
 
 const peers = {} as any;
 const decoder = new TextDecoder();
