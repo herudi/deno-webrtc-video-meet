@@ -1,4 +1,8 @@
-import { Handler, NHttp, HttpError } from "https://deno.land/x/nhttp@1.1.9/mod.ts";
+import {
+  Handler,
+  HttpError,
+  NHttp,
+} from "https://deno.land/x/nhttp@1.1.11/mod.ts";
 
 const peers = {} as any;
 const decoder = new TextDecoder();
@@ -14,10 +18,11 @@ const MIME: Record<string, string> = {
 };
 
 const DEFAULT_PORT = 8080;
-
-const PORT = (Deno.args || []).length === 0
-  ? DEFAULT_PORT
-  : Number(Deno.args[0].replace("--port=", ""));
+const ARGS = Deno.args || [];
+const PORT = ARGS.includes("--port")
+  ? Number(Deno.args[0].replace("--port=", ""))
+  : DEFAULT_PORT;
+const DEV = ARGS.includes("--dev");
 
 const tryDecode = (str: string) => {
   try {
@@ -35,114 +40,115 @@ const wsSend = (ws: WebSocket, data: Record<string, any>) => {
 
 const wsMiddleware: Handler = (rev, next) => {
   if (rev.request.headers.get("upgrade") != "websocket") {
-    throw new HttpError(400, 'Protocol not supported');
+    throw new HttpError(400, "Protocol not supported");
   }
   rev.user = tryDecode(rev.params.token);
   return next();
 };
 
-new NHttp()
-  .get("/", ({ response }) => {
-    response.type("text/html");
-    return Deno.readFile("./client/home.html");
-  })
-  .get("/ws/:token", wsMiddleware, ({ request, user }) => {
-    const { socket, response } = Deno.upgradeWebSocket(request);
-    const { id, room } = user;
-    peers[room] = peers[room] || {};
-    socket.onopen = () => {
-      if (!id && !room) {
-        wsSend(socket, {
-          type: "errorToken",
-          data: {},
-        });
-      } else if (Object.keys(peers[room] || {}).length >= MAX_USER) {
-        wsSend(socket, {
-          type: "full",
-          data: {},
-        });
-      } else {
-        wsSend(socket, {
-          type: "opening",
-          data: { id, room },
-        });
-        peers[room][id] = socket;
-        for (let _id in peers[room]) {
-          if (_id !== id) {
-            wsSend(peers[room][_id], {
-              type: "initReceive",
-              data: { id },
-            });
-          }
-        }
-      }
-    };
-    socket.onmessage = (e) => {
-      const { type, data } = JSON.parse(e.data);
-      if (type === "signal") {
-        if (!peers[room][data.id]) return;
-        wsSend(peers[room][data.id], {
-          type: "signal",
-          data: { id, signal: data.signal },
-        });
-      } else if (type === "initSend") {
-        wsSend(peers[room][data.id], {
-          type: "initSend",
-          data: { id },
-        });
-      } else if (type === "chat") {
-        for (let _id in peers[room]) {
-          if (_id !== id) {
-            wsSend(peers[room][_id], {
-              type: "chat",
-              data: { id, message: data.message },
-            });
-          }
-        }
-      }
-    };
-    socket.onclose = () => {
+const app = new NHttp();
+app.get("/ws/:token", wsMiddleware, ({ request, user }) => {
+  const { socket, response } = Deno.upgradeWebSocket(request);
+  const { id, room } = user;
+  peers[room] = peers[room] || {};
+  socket.onopen = () => {
+    if (!id && !room) {
+      wsSend(socket, {
+        type: "errorToken",
+        data: {},
+      });
+    } else if (Object.keys(peers[room] || {}).length >= MAX_USER) {
+      wsSend(socket, {
+        type: "full",
+        data: {},
+      });
+    } else {
+      wsSend(socket, {
+        type: "opening",
+        data: { id, room },
+      });
+      peers[room][id] = socket;
       for (let _id in peers[room]) {
         if (_id !== id) {
           wsSend(peers[room][_id], {
-            type: "removePeer",
+            type: "initReceive",
             data: { id },
           });
-        } else {
-          delete peers[room][_id];
         }
       }
-      if (Object.keys(peers[room] || {}).length === 0) {
-        delete peers[room];
+    }
+  };
+  socket.onmessage = (e) => {
+    const { type, data } = JSON.parse(e.data);
+    if (type === "signal") {
+      if (!peers[room][data.id]) return;
+      wsSend(peers[room][data.id], {
+        type: "signal",
+        data: { id, signal: data.signal },
+      });
+    } else if (type === "initSend") {
+      wsSend(peers[room][data.id], {
+        type: "initSend",
+        data: { id },
+      });
+    } else if (type === "chat") {
+      for (let _id in peers[room]) {
+        if (_id !== id) {
+          wsSend(peers[room][_id], {
+            type: "chat",
+            data: { id, message: data.message },
+          });
+        }
       }
-    };
-    return response;
-  })
-  .get("/meet", ({ response }) => {
-    response.type("text/html");
-    return Deno.readFile("./client/meet.html");
-  })
-  .post("/join-or-create", ({ body }) => {
-    const { id, room } = body;
-    if ((peers[room] || {})[id]) {
-      throw new HttpError(400, "User " + id + " already exist");
     }
-    if (Object.keys(peers[room] || {}).length >= MAX_USER) {
-      throw new HttpError(400, "Room " + room + " full");
+  };
+  socket.onclose = () => {
+    for (let _id in peers[room]) {
+      if (_id !== id) {
+        wsSend(peers[room][_id], {
+          type: "removePeer",
+          data: { id },
+        });
+      } else {
+        delete peers[room][_id];
+      }
     }
-    const token = btoa(encoder.encode(JSON.stringify(body)).toString());
-    return { token };
-  })
-  .get("*", async ({ response, path }, next) => {
-    try {
-      response.type(MIME[path.substring(path.lastIndexOf("."))]);
-      return await Deno.readFile("./client" + path);
-    } catch (_e) {
+    if (Object.keys(peers[room] || {}).length === 0) {
+      delete peers[room];
+    }
+  };
+  return response;
+});
+app.post("/api/join-or-create", ({ body }) => {
+  const { id, room } = body;
+  if ((peers[room] || {})[id]) {
+    throw new HttpError(400, "User " + id + " already exist");
+  }
+  if (Object.keys(peers[room] || {}).length >= MAX_USER) {
+    throw new HttpError(400, "Room " + room + " full");
+  }
+  const token = btoa(encoder.encode(JSON.stringify(body)).toString());
+  return { token };
+});
+if (DEV) {
+  app.get("/index.js", async ({ response }) => {
+    response.type(MIME[".js"]);
+    const index = await Deno.readTextFile("./public/index.js");
+    return "window.__DEV__ = true;" + index;
+  });
+}
+app.get("*", async ({ response, path }, next) => {
+  try {
+    if (path === "/") path = "/index.html";
+    response.type(MIME[path.substring(path.lastIndexOf("."))]);
+    return await Deno.readTextFile("./public" + path);
+  } catch (_e) {
+    if (path.startsWith("/api")) {
       return next();
     }
-  })
-  .on404(({ response }) => {
-    response.type('text/html');
-    return `<h1>404 NOT FOUND</h1>`;
-  })
-  .listen(PORT);
+    return await Deno.readTextFile("./public/index.html");
+  }
+});
+app.listen(PORT, () => {
+  console.log("> running on port " + PORT);
+});

@@ -1,10 +1,11 @@
 # Deno webRTC Video Meet
 
-[Deno](https://deno.land/) WebRTC video meet and chat with deno native websocket.
+[Deno](https://deno.land/) WebRTC video meet and chat with deno native
+websocket.
 
 [![Deploy](https://deno.com/deno-deploy-button.svg)](https://dash.deno.com/new?url=https://raw.githubusercontent.com/herudi/deno-webrtc-video-meet/master/server.ts)
 
-> Requires Deno 1.15.x or higher.
+> Requires Deno 1.21.x or higher.
 
 ## Features
 
@@ -14,22 +15,30 @@
 - Room
 - No Phuser, No SocketIO
 
-## Run
+## Run Dev
 
 ```bash
-deno run --allow-net --allow-read --unstable server.ts
+deno task dev
 ```
 
-open in http://localhost:8080/
+## Run Prod
 
-```ts
-// change to false if non ssl /client/meet.js.
-const redirectToHttps = false;
+```bash
+deno task start
 ```
+
+## Run Without Task
+
+```bash
+deno run --allow-net --allow-read server.ts
+```
+
+open in http://localhost:8080
 
 ## Demo
 
 https://lite-meet.deno.dev/
 
 ## Note
+
 It's fun project. PRs welcome :).
