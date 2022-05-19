@@ -1,5 +1,5 @@
-function meet({ useVanilla, html }) {
-  useVanilla(() => {
+function meet({ useAfter, html }) {
+  useAfter(() => {
     const fork = {};
     const meetElement = document.getElementById("meet");
     const chatInput = document.getElementById("chatInput");

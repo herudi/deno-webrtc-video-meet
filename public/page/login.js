@@ -1,5 +1,5 @@
-function login({ useVanilla, html, go, baseUrl }) {
-  useVanilla(() => {
+function login({ useAfter, html, go, baseUrl }) {
+  useAfter(() => {
     const $ = (v) => document.querySelector(v);
     const search = window.location.search;
     let inviteroom;
