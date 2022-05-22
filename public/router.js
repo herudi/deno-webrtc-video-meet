@@ -19,4 +19,6 @@ router.add("/meet", async (ctx, next) => {
   const mod = (await import("./page/meet.js")).default;
   return mod(ctx, next);
 });
-router.resolve();
+addEventListener("load", () => {
+  router.resolve();
+});

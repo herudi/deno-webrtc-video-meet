@@ -30,7 +30,11 @@ ${
   });`;
     }).join("")
   }
-${isServer ? "export default router;" : "router.resolve();"}
+${
+    isServer
+      ? "export default router;"
+      : `addEventListener("load", () => {router.resolve();});`
+  }
 `;
 
 const dir = Deno.cwd();
