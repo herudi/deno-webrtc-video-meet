@@ -1,4 +1,5 @@
-function meet({ useAfter, html }) {
+export default function meet({ useAfter, html, setHead }) {
+  setHead(html`<title>Meet - Deno Lite Meet</title>`);
   useAfter(() => {
     const fork = {};
     const meetElement = document.getElementById("meet");

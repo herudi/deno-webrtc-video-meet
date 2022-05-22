@@ -3,6 +3,7 @@ import {
   HttpError,
   NHttp,
 } from "https://deno.land/x/nhttp@1.1.11/mod.ts";
+import router from "./router.ts";
 
 const peers = {} as any;
 const decoder = new TextDecoder();
@@ -131,22 +132,34 @@ app.post("/api/join-or-create", ({ body }) => {
   return { token };
 });
 if (DEV) {
-  app.get("/index.js", async ({ response }) => {
+  app.get("/router.js", async ({ response }) => {
     response.type(MIME[".js"]);
-    const index = await Deno.readTextFile("./public/index.js");
+    const index = await Deno.readTextFile("./public/router.js");
     return "window.__DEV__ = true;" + index;
   });
 }
-app.get("*", async ({ response, path }, next) => {
+app.get("*", async ({ request, response, path }, next) => {
   try {
-    if (path === "/") path = "/index.html";
     response.type(MIME[path.substring(path.lastIndexOf("."))]);
     return await Deno.readTextFile("./public" + path);
   } catch (_e) {
     if (path.startsWith("/api")) {
       return next();
     }
-    return await Deno.readTextFile("./public/index.html");
+    const index = await Deno.readTextFile("./public/template.html");
+    const van = router.resolve({ request });
+    const page = await van.out();
+    const data = await van.data();
+    const head = van.head();
+    response.type("text/html");
+    const html = index
+      .replace("{{HEAD}}", head)
+      .replace("{{PAGE}}", page)
+      .replace(
+        "{{INIT_DATA}}",
+        `window.__VAN_DATA__ = ${JSON.stringify(data)}`,
+      );
+    return html;
   }
 });
 app.listen(PORT, () => {

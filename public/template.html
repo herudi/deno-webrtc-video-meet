@@ -4,17 +4,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="data:,">
-  <link rel="stylesheet" href="/assets/style.css" />
-  <title>Deno Lite Meet</title>
+  {{HEAD}}
   <meta name="description" content="Simple webRTC with Deno native websocket">
   <script src="https://unpkg.com/simple-peer@9.11.1/simplepeer.min.js"></script>
-  <script src="https://unpkg.com/van-router@0.5.7/index.min.js"></script>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/assets/style.css" />
 </head>
 
 <body>
-  <div id="app"></div>
-  <script src="/index.js"></script>
+  <div id="app">{{PAGE}}</div>
+  <script type="module" src="/router.js"></script>
 </body>
 
 </html>

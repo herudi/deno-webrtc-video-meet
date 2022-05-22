@@ -1,4 +1,5 @@
-function login({ useAfter, html, go, baseUrl }) {
+export default function login({ useAfter, html, route, baseUrl, setHead }) {
+  setHead(html`<title>Login - Deno Lite Meet</title>`);
   useAfter(() => {
     const $ = (v) => document.querySelector(v);
     const search = window.location.search;
@@ -8,7 +9,7 @@ function login({ useAfter, html, go, baseUrl }) {
     }
     $("#home").style.display = "none";
     const token = localStorage.getItem("meet_token");
-    if (token) return go("/meet");
+    if (token) return route.go("/meet");
     $("#home").style.display = "block";
     if (inviteroom) {
       setTimeout(() => {
@@ -30,7 +31,7 @@ function login({ useAfter, html, go, baseUrl }) {
         })
         .then((data) => {
           localStorage.setItem("meet_token", data.token);
-          go("/meet");
+          route.go("/meet");
         })
         .catch((err) => {
           console.log(err);
