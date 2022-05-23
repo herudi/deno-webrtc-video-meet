@@ -1,6 +1,6 @@
 import router_list from "./router_list.ts";
 
-const VERSION = "@0.6.1";
+const VERSION = "@0.6.3";
 
 const create = (isServer: boolean = true) =>
   `import { createRouter } from "https://esm.sh/van-router${VERSION}";

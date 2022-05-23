@@ -1,4 +1,4 @@
-import { createRouter } from "https://esm.sh/van-router@0.6.1";
+import { createRouter } from "https://esm.sh/van-router@0.6.3";
 import $0 from "./public/page/login.js";
 import $1 from "./public/page/meet.js";
 const router = createRouter({

@@ -1,4 +1,4 @@
-import { createRouter } from "https://esm.sh/van-router@0.6.1";
+import { createRouter } from "https://esm.sh/van-router@0.6.3";
 
 const router = createRouter({
   render: (elem) => {
