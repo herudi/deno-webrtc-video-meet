@@ -1,7 +1,14 @@
 {
   "tasks": {
-    "start": "deno run --allow-net --allow-read --no-check server.ts",
-    "build": "deno run -A --no-check build.ts && deno fmt",
-    "dev": "deno run --allow-net --allow-read --no-check --watch server.ts --dev"
+    "start": "deno run -A server.ts",
+    "dev": "deno run -A --watch server.ts --dev"
+  },
+  "compilerOptions": {
+    "jsxFactory": "n",
+    "jsxFragmentFactory": "n.Fragment",
+    "lib": [
+      "deno.window",
+      "DOM"
+    ]
   }
 }
