@@ -1,6 +1,46 @@
 import { FC, Helmet, n } from "../deps.ts";
 import Base from "./base.tsx";
 
+const LINKS = [
+  {
+    title: "Repo",
+    href: "https://github.com/herudi/deno-webrtc-video-meet",
+  },
+  {
+    title: "NHttp",
+    href: "https://github.com/nhttp/nhttp",
+  },
+  {
+    title: "Author",
+    href: "https://github.com/herudi",
+  },
+  {
+    title: "Deno",
+    href: "https://deno.land",
+  },
+  {
+    title: "Logo",
+    href: "https://twitter.com/SamipPoudel3",
+  },
+];
+
+const LinkBottom: FC<{
+  href: string;
+}> = ({ href, children }) => {
+  return (
+    <>
+      <a
+        target="_blank"
+        style={{ color: "white", margin: 5 }}
+        href={href}
+      >
+        {children}
+      </a>
+      <span>~</span>
+    </>
+  );
+};
+
 const Home: FC = () => {
   return (
     <Base>
@@ -47,45 +87,10 @@ const Home: FC = () => {
             <input class="my-input" type="submit" value="Join / Create" />
           </form>
           <div style={{ marginTop: 15 }}>
-            <a
-              target="_blank"
-              style={{ color: "white" }}
-              href="https://github.com/herudi/deno-webrtc-video-meet"
-            >
-              Repo
-            </a>
             <span>~</span>
-            <a
-              target="_blank"
-              style={{ color: "white" }}
-              href="https://github.com/nhttp/nhttp"
-            >
-              NHttp
-            </a>
-            <span>~</span>
-            <a
-              target="_blank"
-              style={{ color: "white" }}
-              href="https://github.com/herudi"
-            >
-              Developer
-            </a>
-            <span>~</span>
-            <a
-              target="_blank"
-              style={{ color: "white" }}
-              href="https://deno.land/"
-            >
-              Deno
-            </a>
-            <span>~</span>
-            <a
-              target="_blank"
-              style={{ color: "white" }}
-              href="https://twitter.com/SamipPoudel3"
-            >
-              Logo
-            </a>
+            {LINKS.map(({ title, href }) => {
+              return <LinkBottom href={href}>{title}</LinkBottom>;
+            })}
           </div>
         </div>
       </div>
