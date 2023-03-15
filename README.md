@@ -18,13 +18,7 @@ websocket.
 ```bash
 deno task dev
 ```
-## Run Build
-
-```bash
-deno task build
-```
-
-## Run Prod
+## Run
 
 ```bash
 deno task start
