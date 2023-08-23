@@ -1,7 +1,7 @@
 import { FC, Helmet, n } from "../deps.ts";
 import Base from "./base.tsx";
 
-const Meet: FC<{ isDev: boolean; }> = ({ isDev }) => {
+const Meet: FC<{ isDev: boolean }> = ({ isDev }) => {
   return (
     <Base>
       <Helmet>
@@ -9,7 +9,7 @@ const Meet: FC<{ isDev: boolean; }> = ({ isDev }) => {
         <script src="https://unpkg.com/simple-peer@9.11.1/simplepeer.min.js">
         </script>
       </Helmet>
-      <Helmet body>
+      <Helmet footer>
         {isDev && <script>{`window.__DEV__ = true`}</script>}
         <script src={"/assets/meet.js"}></script>
       </Helmet>

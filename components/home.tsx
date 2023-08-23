@@ -47,7 +47,7 @@ const Home: FC = () => {
       <Helmet>
         <title>Login - Deno Lite Meet</title>
       </Helmet>
-      <Helmet body>
+      <Helmet footer>
         <script src={"/assets/home.js"}></script>
       </Helmet>
       <div id="home">
@@ -55,13 +55,14 @@ const Home: FC = () => {
           style={{
             textAlign: "center",
             width: "100%",
-            marginTop: 40,
+            marginTop: 70,
           }}
         >
           <img
-            src="https://deno.land/images/artwork/glitchy-deno.jpg"
+            src="/assets/img/glitchy-deno.jpg"
             alt="deno"
             width="150"
+            style={{ borderRadius: "10%" }}
           />
           <h1 style={{ marginBottom: 5 }}>Deno Lite Meet</h1>
           <div style={{ marginBottom: 15 }}>

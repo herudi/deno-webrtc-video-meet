@@ -8,16 +8,13 @@ const isDev = ARGS.includes("--dev");
 
 const app = nhttp();
 
-app.use("/assets", serveStatic("public"));
+app.use("/assets", serveStatic("public", { etag: true }));
 
 app.engine(renderToHtml);
 
 app.post("/api/join-or-create", wsLogin);
 app.get("/", () => <Home />);
 app.get("/ws/:token", wsHandlers);
-app.get(
-  "/meet",
-  ({ params }) => <Meet isDev={isDev} />,
-);
+app.get("/meet", () => <Meet isDev={isDev} />);
 
 export default app;
