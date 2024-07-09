@@ -1,16 +1,15 @@
-import { FC, Helmet, n } from "../deps.ts";
-import Base from "./base.tsx";
+import { type FC, Helmet, Script } from "@nhttp/nhttp/jsx";
+import Layout from "./layout.tsx";
 
-const Meet: FC<{ isDev: boolean }> = ({ isDev }) => {
+const Meet: FC = () => {
   return (
-    <Base>
+    <Layout>
       <Helmet>
         <title>Meet - Deno Lite Meet</title>
         <script src="https://unpkg.com/simple-peer@9.11.1/simplepeer.min.js">
         </script>
       </Helmet>
       <Helmet footer>
-        {isDev && <script>{`window.__DEV__ = true`}</script>}
         <script src={"/assets/meet.js"}></script>
       </Helmet>
       <div id="meet">
@@ -42,9 +41,9 @@ const Meet: FC<{ isDev: boolean }> = ({ isDev }) => {
           <button class="button" onclick="openChat()">
             Chat
           </button>
-          <button class="button" onclick="logout()">
+          <a class="button" href="/logout">
             Logout
-          </button>
+          </a>
         </div>
         <div class="chat-container" id="chatbox" style={{ display: "none" }}>
           <button type="button" onclick="closeChat()">
@@ -63,7 +62,7 @@ const Meet: FC<{ isDev: boolean }> = ({ isDev }) => {
           </form>
         </div>
       </div>
-    </Base>
+    </Layout>
   );
 };
 

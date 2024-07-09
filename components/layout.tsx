@@ -1,10 +1,11 @@
-import { FC, Helmet, n } from "../deps.ts";
-const Base: FC = ({ children }) => {
+import { type FC, Helmet } from "@nhttp/nhttp/jsx";
+
+const Layout: FC = ({ children }) => {
   return (
     <>
       <Helmet>
         <html lang="en-US" />
-        <link rel="icon" href="data:," />
+        <link rel="icon" href="/assets/img/glitchy-deno.jpg" />
         <link rel="stylesheet" href="/assets/style.css" />
         <meta
           name="description"
@@ -16,4 +17,4 @@ const Base: FC = ({ children }) => {
   );
 };
 
-export default Base;
+export default Layout;

@@ -1,20 +1,10 @@
 const fork = window;
-const meetElement = document.getElementById("meet");
 const chatInput = document.getElementById("chatInput");
 const chatbox = document.getElementById("chatbox");
 const chatMessage = document.getElementById("chatMessage");
 const chatForm = document.getElementById("chatForm");
-meetElement.style.display = "none";
-const token = localStorage.getItem("meet_token");
-const isHttps = window.location.href.startsWith("https");
-const isDev = window.__DEV__ ?? false;
+const isHttps = () => window.location.href.startsWith("https");
 
-fork.logout = () => {
-  localStorage.removeItem("meet_token");
-  setTimeout(() => {
-    window.location.href = "./";
-  }, 300);
-};
 fork.openChat = () => {
   chatbox.style.display = "block";
   setTimeout(() => {
@@ -28,10 +18,6 @@ fork.closeChat = () => {
 let ws;
 let localStream = null;
 const peers = {};
-if (!isDev && !isHttps) {
-  window.location.href = "https://" +
-    window.location.href.replace("http://", "");
-}
 const configuration = {
   "iceServers": [
     {
@@ -66,10 +52,10 @@ constraints.video.facingMode = {
   ideal: "user",
 };
 let info = {};
-function init(token, stream) {
-  const protoWs = isHttps ? "wss" : "ws";
+function init(stream) {
+  const protoWs = isHttps() ? "wss" : "ws";
   ws = new WebSocket(
-    protoWs + "://" + window.location.host + "/ws/" + token,
+    protoWs + "://" + window.location.host + "/ws",
   );
   ws.onclose = () => {
     for (const id in peers) {
@@ -93,9 +79,10 @@ function init(token, stream) {
     } else if (type === "initSend") addPeer(data.id, true);
     else if (type === "removePeer") removePeer(data.id);
     else if (type === "signal") peers[data.id].signal(data.signal);
-    else if (type === "full") alert("Room FULL");
-    else if (type === "errorToken") fork.logout();
-    else if (type === "chat") {
+    else if (type === "error") {
+      alert(data.message);
+      window.location.href = "./logout";
+    } else if (type === "chat") {
       chatMessage.innerHTML += `
         <div class="chat-message">
           <b>${data.id.split("@")[0]}: </b>${data.message}
@@ -306,15 +293,11 @@ chatForm.onsubmit = (e) => {
   chatMessage.scrollTop = chatMessage.scrollHeight;
 };
 
-if (token) {
-  meetElement.style.display = "block";
-  navigator.mediaDevices.getUserMedia(constraints)
-    .then(function (stream) {
-      init(token, stream);
-    })
-    .catch(function (err) {
-      alert(`getusermedia error ${err.name}`);
-    });
-} else {
-  window.location.href = "./";
-}
+navigator.mediaDevices.getUserMedia(constraints)
+  .then(function (stream) {
+    init(stream);
+  })
+  .catch(function (err) {
+    console.log(err);
+    alert(`getusermedia error ${err.name}`);
+  });

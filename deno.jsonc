@@ -4,11 +4,14 @@
     "dev": "deno run -A --watch server.ts --dev"
   },
   "compilerOptions": {
-    "jsxFactory": "n",
-    "jsxFragmentFactory": "n.Fragment",
+    "jsx": "react-jsx",
+    "jsxImportSource": "@nhttp/nhttp/jsx",
     "lib": [
       "deno.window",
       "DOM"
     ]
+  },
+  "imports": {
+    "@nhttp/nhttp": "jsr:@nhttp/nhttp@^2.0.2"
   }
 }
