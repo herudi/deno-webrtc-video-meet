@@ -1,5 +1,5 @@
-import { type FC, Helmet, Script } from "@nhttp/nhttp/jsx";
-import Layout from "./layout.tsx";
+import { type FC, Helmet } from "@nhttp/nhttp/jsx";
+import Layout from "./Layout.tsx";
 
 const Meet: FC = () => {
   return (

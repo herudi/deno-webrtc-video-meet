@@ -1,5 +1,5 @@
 import { type FC, Helmet, useQuery, useScript } from "@nhttp/nhttp/jsx";
-import Layout from "./layout.tsx";
+import Layout from "./Layout.tsx";
 
 const LINKS = [
   {
@@ -41,7 +41,7 @@ const LinkBottom: FC<{
   );
 };
 
-export const Join: FC = () => {
+const Join: FC = () => {
   const { invite } = useQuery();
   useScript({ invite }, (data) => {
     if (data.invite) {
@@ -108,3 +108,5 @@ export const Join: FC = () => {
     </Layout>
   );
 };
+
+export default Join;

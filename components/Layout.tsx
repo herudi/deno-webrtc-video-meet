@@ -5,7 +5,7 @@ const Layout: FC = ({ children }) => {
     <>
       <Helmet>
         <html lang="en-US" />
-        <link rel="icon" href="/assets/img/glitchy-deno.jpg" />
+        <link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico" />
         <link rel="stylesheet" href="/assets/style.css" />
         <meta
           name="description"

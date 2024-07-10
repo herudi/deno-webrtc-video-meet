@@ -1,9 +1,13 @@
+const $ = (id) => document.getElementById(id);
+WebSocket.prototype.json = function (data) {
+  this.send(JSON.stringify(data));
+};
 const fork = window;
-const chatInput = document.getElementById("chatInput");
-const chatbox = document.getElementById("chatbox");
-const chatMessage = document.getElementById("chatMessage");
-const chatForm = document.getElementById("chatForm");
-const isHttps = () => window.location.href.startsWith("https");
+const chatInput = $("chatInput");
+const chatbox = $("chatbox");
+const chatMessage = $("chatMessage");
+const chatForm = $("chatForm");
+const isHttps = () => fork.location.href.startsWith("https");
 
 fork.openChat = () => {
   chatbox.style.display = "block";
@@ -66,16 +70,13 @@ function init(stream) {
     const { type, data } = JSON.parse(e.data);
     if (type === "initReceive") {
       addPeer(data.id, false);
-      ws.send(JSON.stringify({
-        type: "initSend",
-        data,
-      }));
+      ws.json({ type: "initSend", data });
     } else if (type === "opening") {
       localVideo.srcObject = stream;
       localStream = stream;
       info = data;
-      document.getElementById("settings").style.display = "inline-block";
-      document.getElementById("me").innerHTML = `Me: ${info.id}`;
+      $("settings").style.display = "inline-block";
+      $("me").innerHTML = `Me: ${info.id}`;
     } else if (type === "initSend") addPeer(data.id, true);
     else if (type === "removePeer") removePeer(data.id);
     else if (type === "signal") peers[data.id].signal(data.signal);
@@ -93,8 +94,8 @@ function init(stream) {
   };
 }
 function removePeer(id) {
-  const videoEl = document.getElementById(id);
-  const colEl = document.getElementById("col-" + id);
+  const videoEl = $(id);
+  const colEl = $("col-" + id);
   if (colEl && videoEl) {
     const tracks = videoEl.srcObject.getTracks();
     tracks.forEach(function (track) {
@@ -113,13 +114,13 @@ function addPeer(id, am_initiator) {
     config: configuration,
   });
   peers[id].on("signal", (data) => {
-    ws.send(JSON.stringify({
+    ws.json({
       type: "signal",
       data: {
         signal: data,
         id,
       },
-    }));
+    });
   });
   peers[id].on("stream", (stream) => {
     // col
@@ -149,7 +150,7 @@ function openPictureMode(el, id) {
   el.requestPictureInPicture();
   el.onleavepictureinpicture = () => {
     setTimeout(() => {
-      document.getElementById(id).play();
+      $(id).play();
     }, 300);
   };
 }
@@ -280,10 +281,10 @@ chatForm.onsubmit = (e) => {
   if (!chatInput.value) {
     return;
   }
-  ws.send(JSON.stringify({
+  ws.json({
     type: "chat",
     data: { id: info.id, message: chatInput.value },
-  }));
+  });
   chatMessage.innerHTML += `
     <div class="chat-message">
       <b>Me: </b>${chatInput.value}
@@ -294,9 +295,7 @@ chatForm.onsubmit = (e) => {
 };
 
 navigator.mediaDevices.getUserMedia(constraints)
-  .then(function (stream) {
-    init(stream);
-  })
+  .then(init)
   .catch(function (err) {
     console.log(err);
     alert(`getusermedia error ${err.name}`);
